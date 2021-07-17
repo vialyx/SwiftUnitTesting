@@ -8,11 +8,22 @@
 import Cocoa
 
 class ViewController: NSViewController {
+    
+    @IBOutlet weak var username: NSTextField!
+    @IBOutlet weak var password: NSTextField!
+    @IBOutlet weak var error: NSTextField!
+    
+    let viewModel: ViewModel = DefaultViewModel(
+        client: DefaultNetworkClient(),
+        router: DefaultRouter()
+    )
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        viewModel.onError = { [weak self] error in
+            self?.error.stringValue = error.localizedDescription
+        }
     }
 
     override var representedObject: Any? {
@@ -21,6 +32,12 @@ class ViewController: NSViewController {
         }
     }
 
-
+    @IBAction func signup(_ sender: Any) {
+        viewModel.signup(
+            username: username.stringValue,
+            password: password.stringValue
+        )
+    }
+    
 }
 
